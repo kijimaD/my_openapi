@@ -1,10 +1,17 @@
 version: '3.0'
 services:
   redoc:
-    image: 'redocly/redoc'
+    image: redocly/redoc
     ports:
-      - '7777:80'
+      - 7777:80
     volumes:
-      - './openapi.yml:/usr/share/nginx/html/openapi.yml'
+      - ./openapi.yml:/usr/share/nginx/html/openapi.yml
     environment:
       - 'SPEC_URL=openapi.yml'
+  mock:
+    image: stoplight/prism:4
+    ports:
+      - 4010:4010
+    volumes:
+      - .:/work
+    command: mock -h 0.0.0.0 /work/openapi.yml
