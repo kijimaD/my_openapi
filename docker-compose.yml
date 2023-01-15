@@ -1,0 +1,10 @@
+version: '3.0'
+services:
+  redoc:
+    image: 'redocly/redoc'
+    ports:
+      - '7777:80'
+    volumes:
+      - './openapi.yml:/usr/share/nginx/html/openapi.yml'
+    environment:
+      - 'SPEC_URL=openapi.yml'
