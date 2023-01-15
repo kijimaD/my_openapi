@@ -11,7 +11,7 @@ services:
   mock:
     image: stoplight/prism:4
     ports:
-      - 4010:4010
+      - 8888:4010
     volumes:
       - .:/work
     command: mock -h 0.0.0.0 /work/openapi.yml

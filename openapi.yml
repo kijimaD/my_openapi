@@ -18,28 +18,32 @@ servers:
     description: ステージング
 tags:
   - name: pet
-    description: Everything about your Pets
+    description: Petの説明
     externalDocs:
-      description: Find out more
+      description: Petについてのリンク
       url: 'http://swagger.io'
   - name: user
-    description: Operations about user
+    description: Userの説明
     externalDocs:
-      description: Find out more about our store
+      description: Userについてのリンク
       url: 'http://swagger.io'
 schemes:
   - http
+  - https
 paths:
   /pet:
     get:
-      summary: List all pets
-      operationId: listPets
       tags:
         - pet
+      summary: ペット一覧を表示する
+      operationId: listPets
+      produces:
+        - application/xml
+        - application/json
       parameters:
         - name: limit
           in: query
-          description: How many items to return at one time (max 100)
+          description: 一度いくつ返却するか (max 100)
           required: false
           schema:
             type: integer
@@ -47,10 +51,10 @@ paths:
             format: int32
       responses:
         '200':
-          description: A paged array of pets
+          description: ペットの配列
           headers:
             x-next:
-              description: A link to the next page of responses
+              description: 次のページへのレスポンス
               schema:
                 type: string
           content:
@@ -66,8 +70,8 @@ paths:
     post:
       tags:
         - pet
-      summary: Add a new pet to the store
-      description: ''
+      summary: 店を追加する
+      description: '店を追加する'
       operationId: addPet
       consumes:
         - application/json
@@ -92,7 +96,7 @@ paths:
     put:
       tags:
         - pet
-      summary: Update an existing pet
+      summary: 既に存在するペットを更新する
       description: ''
       operationId: updatePet
       consumes:
@@ -120,11 +124,39 @@ paths:
             - 'write:pets'
             - 'read:pets'
   /user:
+    get:
+      tags:
+        - user
+      summary: "ペット情報API"
+      description: "指定されたpetIdの情報を返します"
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+      - name: "petId"
+        in: "path"
+        description: "取得したいペットのID"
+        required: false
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+                format: "int64"
+                example: 1
+              name:
+                type: "string"
+                example: "ポチ"
     post:
       tags:
         - user
-      summary: Create user
-      description: This can only be done by the logged in user.
+      summary: ユーザを作成する
+      description: ユーザを作成する
       operationId: createUser
       produces:
         - application/xml
@@ -132,18 +164,18 @@ paths:
       parameters:
         - in: body
           name: body
-          description: Created user object
+          description: ユーザオブジェクトを作成する
           required: true
           schema:
             $ref: '#/definitions/User'
       responses:
         default:
-          description: successful operation
+          description: 成功レスポンス
   /user/createWithArray:
     post:
       tags:
         - user
-      summary: Creates list of users with given input array
+      summary: 受け取った配列でユーザをバッチ作成する
       description: ''
       operationId: createUsersWithArrayInput
       produces:
@@ -152,7 +184,7 @@ paths:
       parameters:
         - in: body
           name: body
-          description: List of user object
+          description: ユーザオブジェクトの一覧
           required: true
           schema:
             type: array
@@ -160,33 +192,7 @@ paths:
               $ref: '#/definitions/User'
       responses:
         default:
-          description: successful operation
-    put:
-      tags:
-        - user
-      summary: Updated user
-      description: This can only be done by the logged in user.
-      operationId: updateUser
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - name: username
-          in: path
-          description: name that need to be deleted
-          required: true
-          type: string
-        - in: body
-          name: body
-          description: Updated user object
-          required: true
-          schema:
-            $ref: '#/definitions/User'
-      responses:
-        '400':
-          description: Invalid user supplied
-        '404':
-          description: User not found
+          description: 成功レスポンス
 securityDefinitions:
   petstore_auth:
     type: oauth2
