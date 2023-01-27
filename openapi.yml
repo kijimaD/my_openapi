@@ -1,367 +1,106 @@
-swagger: '2.0'
+---
+openapi: "3.1.0"
+
 info:
-  description: 'これはサンプルサーバです。'
-  version: 1.0.0
-  title: Sample Server
-  termsOfService: 'http://swagger.io/terms/'
+  description: |
+    ## develop
+    hello world
+      - list
+        - A
+        - B
+
+  version: 1.0.1
+  title: API Docs
   contact:
+    name: kijimad
     email: norimaking777@gmail.com
-  license:
-    name: GNU General Public License v3.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-host: example.com
-basePath: /v1
+
 servers:
-  - url: https://example.dev/v1
-    description: 開発
-  - url: https://example.stg/v1
-    description: ステージング
+  - url: http://localhost:6969
+    description: ローカル環境モック(Prism)
+
 tags:
-  - name: pet
-    description: Petの説明
-    externalDocs:
-      description: Petについてのリンク
-      url: 'http://swagger.io'
-  - name: user
-    description: Userの説明
-    externalDocs:
-      description: Userについてのリンク
-      url: 'http://swagger.io'
-schemes:
-  - http
-  - https
+  - name: Pet
+    description: |
+      ペット
+
 paths:
-  /pet:
+  /manage/pets:
     get:
+      summary: ペット一覧
+      description: ペット一覧
+      operationId: list_pets
       tags:
-        - pet
-      summary: ペット一覧を表示する
-      operationId: listPets
-      produces:
-        - application/xml
-        - application/json
+        - Pet
       parameters:
-        - name: limit
-          in: query
-          description: 一度いくつ返却するか (max 100)
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            format: int32
+        - $ref: "#/components/parameters/Limit"
       responses:
         '200':
-          description: ペットの配列
-          headers:
-            x-next:
-              description: 次のページへのレスポンス
+          description: 成功
+          content:
+            application/json:
               schema:
-                type: string
+                required:
+                  - pets
+                properties:
+                  pets:
+                    $ref: "#/components/schemas/Pets"
+              examples:
+                case1:
+                  summary: petsが存在する
+                  $ref: "#/components/examples/PetsResponse"
+                case2:
+                  summary: petsが存在しない
+                  value:
+                    pets: []
+        '404':
+          description: '存在しない'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /pets/{pet_id}:
+    get:
+      summary: pet詳細
+      description: pet詳細
+      operationId: showPet
+      tags:
+        - Pet
+      parameters:
+        - $ref: "#/components/parameters/PetId"
+      responses:
+        '200':
+          description: 成功
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Pet"
-        # default:
-        #   description: unexpected error
-        #   content:
-        #     application/json:
-        #       schema:
-        #         $ref: "#/components/schemas/Error"
-    post:
-      tags:
-        - pet
-      summary: 店を追加する
-      description: '店を追加する'
-      operationId: addPet
-      consumes:
-        - application/json
-        - application/xml
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          description: Pet object that needs to be added to the store
-          required: true
-          schema:
-            $ref: '#/definitions/Pet'
-      responses:
-        '405':
-          description: Invalid input
-      security:
-        - petstore_auth:
-            - 'write:pets'
-            - 'read:pets'
-    put:
-      tags:
-        - pet
-      summary: 既に存在するペットを更新する
-      description: ''
-      operationId: updatePet
-      consumes:
-        - application/json
-        - application/xml
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          description: Pet object that needs to be added to the store
-          required: true
-          schema:
-            $ref: '#/definitions/Pet'
-      responses:
-        '400':
-          description: Invalid ID supplied
+              examples:
+                case1:
+                  summary: petが存在する(A)
+                  $ref: "#/components/examples/PetResponseA"
+                case2:
+                  summary: petが存在する(B)
+                  $ref: "#/components/examples/PetResponseB"
         '404':
-          description: Pet not found
-        '405':
-          description: Validation exception
-      security:
-        - petstore_auth:
-            - 'write:pets'
-            - 'read:pets'
-  /user:
-    get:
-      tags:
-        - user
-      summary: "ペット情報API"
-      description: "指定されたpetIdの情報を返します"
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "取得したいペットのID"
-        required: false
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "成功時のレスポンス"
-          schema:
-            type: "object"
-            properties:
-              id:
-                type: "integer"
-                format: "int64"
-                example: 1
-              name:
-                type: "string"
-                example: "ポチ"
-    post:
-      tags:
-        - user
-      summary: ユーザを作成する
-      description: ユーザを作成する
-      operationId: createUser
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          description: ユーザオブジェクトを作成する
-          required: true
-          schema:
-            $ref: '#/definitions/User'
-      responses:
+          description: '存在しない'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         default:
-          description: 成功レスポンス
-  /user/createWithArray:
-    post:
-      tags:
-        - user
-      summary: 受け取った配列でユーザをバッチ作成する
-      description: ''
-      operationId: createUsersWithArrayInput
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          description: ユーザオブジェクトの一覧
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/User'
-      responses:
-        default:
-          description: 成功レスポンス
-securityDefinitions:
-  petstore_auth:
-    type: oauth2
-    authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
-    flow: implicit
-    scopes:
-      'write:pets': modify pets in your account
-      'read:pets': read your pets
-  api_key:
-    type: apiKey
-    name: api_key
-    in: header
-definitions:
-  Order:
-    title: Pet Order
-    description: An order for a pets from the pet store
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      petId:
-        type: integer
-        format: int64
-      quantity:
-        type: integer
-        format: int32
-      shipDate:
-        type: string
-        format: date-time
-      status:
-        type: string
-        description: Order Status
-        enum:
-          - placed
-          - approved
-          - delivered
-      complete:
-        type: boolean
-        default: false
-    xml:
-      name: Order
-  Category:
-    title: Pet category
-    description: A category for a pet
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      name:
-        type: string
-    xml:
-      name: Category
-  User:
-    title: a User
-    description: A User who is purchasing from the pet store
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      username:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
-      userStatus:
-        type: integer
-        format: int32
-        description: User Status
-    xml:
-      name: User
-  Tag:
-    title: Pet Tag
-    description: A tag for a pet
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      name:
-        type: string
-    xml:
-      name: Tag
-  Pet:
-    title: a Pet
-    description: A pet for sale in the pet store
-    type: object
-    required:
-      - name
-      - photoUrls
-    properties:
-      id:
-        type: integer
-        format: int64
-      category:
-        $ref: '#/definitions/Category'
-      name:
-        type: string
-        example: doggie
-      photoUrls:
-        type: array
-        xml:
-          name: photoUrl
-          wrapped: true
-        items:
-          type: string
-      tags:
-        type: array
-        xml:
-          name: tag
-          wrapped: true
-        items:
-          $ref: '#/definitions/Tag'
-      status:
-        type: string
-        description: pet status in the store
-        enum:
-          - available
-          - pending
-          - sold
-    xml:
-      name: Pet
-  ApiResponse:
-    title: An uploaded response
-    description: Describes the result of uploading an image resource
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      type:
-        type: string
-      message:
-        type: string
-  #issue: https://github.com/swagger-api/swagger-codegen/issues/7980
-  Amount:
-    type: object
-    description: >
-      some description
-    properties:
-      value:
-        format: double
-        type: number
-        minimum: 0.01
-        maximum: 1000000000000000
-        description: >
-          some description
-      currency:
-        $ref: '#/definitions/Currency'
-    required:
-      - value
-      - currency
-  Currency:
-    type: string
-    pattern: '^[A-Z]{3,3}$'
-    description: >
-      some description
-externalDocs:
-  description: Find out more about Swagger
-  url: 'http://swagger.io'
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     Pet:
@@ -371,15 +110,40 @@ components:
       properties:
         id:
           type: integer
-          format: int64
+          description: pet id
         name:
           type: string
-        tag:
-          type: string
+          description: 名前
+        coord:
+          description: 座標
+          $ref: "#/components/schemas/Coord3"
     Pets:
       type: array
+      description: ペット一覧
       items:
-        $ref: "#/components/schemas/Pet"
+        properties:
+          id:
+            type: integer
+            description: pet ID
+    Coord3:
+      description: 三次元座標
+      required:
+        - x
+        - y
+        - z
+      properties:
+        x:
+          description: X座標
+          type: number
+          format: double
+        y:
+          description: Y座標
+          type: number
+          format: double
+        z:
+          description: Z座標
+          type: number
+          format: double
     Error:
       required:
         - code
@@ -390,3 +154,47 @@ components:
           format: int32
         message:
           type: string
+  examples:
+    PetsResponse:
+      description: pets
+      value:
+        pets:
+          - id: 1
+            name: dog
+          - id: 2
+            name: cat
+    PetResponseA:
+      description: pet
+      value:
+        id: 1
+        name: dog
+        coord:
+          x: 1.0
+          y: 1.0
+          z: 1.0
+    PetResponseB:
+      description: pet
+      value:
+        id: 2
+        name: dog
+        coord:
+          x: 1.0
+          y: 1.0
+          z: 1.0
+  parameters:
+    PetId:
+      name: pet_id
+      in: path
+      description: pet ID
+      required: true
+      schema:
+        type: integer
+        format: int32
+    Limit:
+      name: limit
+      in: query
+      description: データ件数
+      required: false
+      schema:
+        type: integer
+        format: int32
