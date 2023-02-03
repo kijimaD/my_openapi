@@ -13,7 +13,7 @@ lint: spectral yamllint openapi-validator ## すべてのLintを実行する
 
 .PHONY: spectral
 spectral: ## spectral lintを実行する
-	docker run --rm -v ${PWD}:/work -w /work dev bash -c "npx @stoplight/spectral-cli lint openapi.yml"
+	docker run --rm -v ${PWD}:/work -w /work stoplight/spectral lint openapi.yml
 
 .PHONY: yamllint
 yamllint: ## yaml lintを実行する
