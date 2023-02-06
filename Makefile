@@ -4,9 +4,9 @@
 build: ## 開発用コンテナ(lint用)をビルドする
 	docker build . -t dev
 
-.PHONY: copy
-copy: ## 静的ファイルをコンテナからホストへコピーする
-	docker compose cp doc:/usr/share/nginx/html ./
+.PHONY: gen
+gen: ## 静的ファイルをコンテナからホストへコピーする
+	docker run --rm -v ${PWD}:/work --workdir /work ghcr.io/redocly/redoc/cli build openapi.yml -o index.html
 
 .PHONY: lint
 lint: spectral yamllint openapi-validator ## すべてのLintを実行する
