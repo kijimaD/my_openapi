@@ -2,6 +2,8 @@
 openapi: "3.1.0"
 
 info:
+  x-logo:
+    url: https://upload.wikimedia.org/wikipedia/commons/7/7f/Rotating_earth_animated_transparent.gif?20201022124448
   description: |
     ## develop
     hello world
@@ -21,6 +23,7 @@ servers:
 
 tags:
   - name: Pet
+    x-displayName: 🐶ペット
     description: |
       ペット
 
