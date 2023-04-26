@@ -24,81 +24,10 @@ servers:
 tags:
   - name: Pet
     x-displayName: 🐶ペット
-    description: |
-      ペット
+    description: ペット
 
 paths:
   /pets:
-    get:
-      summary: ペット一覧
-      description: ペット一覧
-      operationId: list_pets
-      tags:
-        - Pet
-      parameters:
-        - $ref: "./components/parameters.yml#/LimitParam"
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                required:
-                  - pets
-                properties:
-                  pets:
-                    $ref: "./schemas/Pet.yml#/Pets"
-              examples:
-                case1:
-                  $ref: "./components/examples.yml#/PetsExample"
-                case2:
-                  summary: petsが存在しない
-                  value:
-                    pets: []
-        '404':
-          description: '存在しない'
-          content:
-            application/json:
-              schema:
-                $ref: "./components/errors.yml#/404NotFound"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "./components/errors.yml#/500Internal"
+    $ref: "./paths/pets.yml#/pets"
   /pets/{pet_id}:
-    get:
-      summary: pet詳細
-      description: pet詳細
-      operationId: showPet
-      tags:
-        - Pet
-      parameters:
-        - $ref: "./components/parameters.yml#/PetIdParam"
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: "./schemas/Pet.yml#/Pet"
-              examples:
-                case1:
-                  summary: petが存在する(A)
-                  $ref: "./components/examples.yml#/PetExampleA"
-                case2:
-                  summary: petが存在する(B)
-                  $ref: "./components/examples.yml#/PetExampleB"
-        '404':
-          description: '存在しない'
-          content:
-            application/json:
-              schema:
-                $ref: "./components/errors.yml#/404NotFound"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "./components/errors.yml#/500Internal"
+    $ref: "./paths/pet.yml#/pet"

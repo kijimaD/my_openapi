@@ -8,7 +8,6 @@ services:
       - ./openapi.yml:/usr/share/nginx/html/openapi.yml
     environment:
       - 'SPEC_URL=openapi.yml'
-    restart: always
   mock:
     image: stoplight/prism:4
     ports:
@@ -16,4 +15,3 @@ services:
     volumes:
       - .:/work
     command: mock -h 0.0.0.0 /work/openapi.yml
-    restart: always
