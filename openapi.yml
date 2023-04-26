@@ -35,6 +35,8 @@ paths:
       operationId: list_pets
       tags:
         - Pet
+      parameters:
+        - $ref: "./components/parameters.yml#/LimitParam"
       responses:
         '200':
           description: 成功
@@ -80,14 +82,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pet"
+                $ref: "./schemas/Pet.yml#/Pet"
               examples:
                 case1:
                   summary: petが存在する(A)
-                  $ref: "#/components/examples/PetResponseA"
+                  $ref: "./components/examples.yml#/PetExampleA"
                 case2:
                   summary: petが存在する(B)
-                  $ref: "#/components/examples/PetResponseB"
+                  $ref: "./components/examples.yml#/PetExampleB"
         '404':
           description: '存在しない'
           content:
@@ -100,67 +102,3 @@ paths:
             application/json:
               schema:
                 $ref: "./components/errors.yml#/500Internal"
-
-components:
-  schemas:
-    Pet:
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: integer
-          description: pet id
-        name:
-          type: string
-          description: 名前
-        coord:
-          description: 座標
-          $ref: "#/components/schemas/Coord3"
-    Coord3:
-      description: 三次元座標
-      required:
-        - x
-        - y
-        - z
-      properties:
-        x:
-          description: X座標
-          type: number
-          format: double
-        y:
-          description: Y座標
-          type: number
-          format: double
-        z:
-          description: Z座標
-          type: number
-          format: double
-  examples:
-    PetResponseA:
-      description: pet
-      value:
-        id: 1
-        name: dog
-        coord:
-          x: 1.0
-          y: 1.0
-          z: 1.0
-    PetResponseB:
-      description: pet
-      value:
-        id: 2
-        name: dog
-        coord:
-          x: 1.0
-          y: 1.0
-          z: 1.0
-  parameters:
-    Limit:
-      name: limit
-      in: query
-      description: データ件数
-      required: false
-      schema:
-        type: integer
-        format: int32

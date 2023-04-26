@@ -1,0 +1,19 @@
+Coord3:
+  description: 三次元座標
+  required:
+    - x
+    - y
+    - z
+  properties:
+    x:
+      description: X座標
+      type: number
+      format: double
+    y:
+      description: Y座標
+      type: number
+      format: double
+    z:
+      description: Z座標
+      type: number
+      format: double

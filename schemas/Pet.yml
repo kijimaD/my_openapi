@@ -11,7 +11,7 @@ Pet:
       description: 名前
     coord:
       description: 座標
-      $ref: "#/components/schemas/Coord3"
+      $ref: "./Common.yml#/Coord3"
 Pets:
   type: array
   description: ペット一覧
