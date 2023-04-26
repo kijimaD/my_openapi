@@ -35,8 +35,6 @@ paths:
       operationId: list_pets
       tags:
         - Pet
-      parameters:
-        - $ref: "#/components/parameters/Limit"
       responses:
         '200':
           description: 成功
@@ -47,11 +45,10 @@ paths:
                   - pets
                 properties:
                   pets:
-                    $ref: "#/components/schemas/Pets"
+                    $ref: "./schemas/Pet.yml#/Pets"
               examples:
                 case1:
-                  summary: petsが存在する
-                  $ref: "#/components/examples/PetsResponse"
+                  $ref: "./components/examples.yml#/PetsExample"
                 case2:
                   summary: petsが存在しない
                   value:
@@ -61,13 +58,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "./components/errors.yml#/404NotFound"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "./components/errors.yml#/500Internal"
   /pets/{pet_id}:
     get:
       summary: pet詳細
@@ -76,7 +73,7 @@ paths:
       tags:
         - Pet
       parameters:
-        - $ref: "#/components/parameters/PetId"
+        - $ref: "./components/parameters.yml#/PetIdParam"
       responses:
         '200':
           description: 成功
@@ -96,13 +93,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "./components/errors.yml#/404NotFound"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "./components/errors.yml#/500Internal"
 
 components:
   schemas:
@@ -120,14 +117,6 @@ components:
         coord:
           description: 座標
           $ref: "#/components/schemas/Coord3"
-    Pets:
-      type: array
-      description: ペット一覧
-      items:
-        properties:
-          id:
-            type: integer
-            description: pet ID
     Coord3:
       description: 三次元座標
       required:
@@ -147,25 +136,7 @@ components:
           description: Z座標
           type: number
           format: double
-    Error:
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
   examples:
-    PetsResponse:
-      description: pets
-      value:
-        pets:
-          - id: 1
-            name: dog
-          - id: 2
-            name: cat
     PetResponseA:
       description: pet
       value:
@@ -185,14 +156,6 @@ components:
           y: 1.0
           z: 1.0
   parameters:
-    PetId:
-      name: pet_id
-      in: path
-      description: pet ID
-      required: true
-      schema:
-        type: integer
-        format: int32
     Limit:
       name: limit
       in: query

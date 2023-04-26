@@ -1,0 +1,18 @@
+PetsExample:
+  description: pets
+  value:
+    pets:
+      - id: 1
+        name: dog
+      - id: 2
+        name: cat
+
+PetExampleA:
+  description: pet
+  value:
+    id: 1
+    name: dog
+    coord:
+      x: 1.0
+      y: 1.0
+      z: 1.0

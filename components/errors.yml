@@ -1,0 +1,25 @@
+MessageResponse:
+  type: object
+  required:
+    - code
+    - message
+  properties:
+    code:
+      type: integer
+      format: int32
+    message:
+      type: string
+
+404NotFound:
+  description: not found
+  content:
+    application/json:
+      schema:
+        $ref: "./errors.yml#/MessageResponse"
+
+500Internal:
+  description: not found
+  content:
+    application/json:
+      schema:
+        $ref: "./errors.yml#/MessageResponse"

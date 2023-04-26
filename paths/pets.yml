@@ -1,0 +1,39 @@
+get:
+  summary: ペット一覧
+  description: ペット一覧
+  operationId: list_pets
+  tags:
+    - Pet
+  parameters:
+    - $ref: "../components/parameters.yml#/PetIdParam"
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            required:
+              - pets
+            properties:
+              pets:
+                $ref: "../components/responses#/Pets"
+          examples:
+            case1:
+              summary: petsが存在する
+              $ref: "../components/examples#/PetsExampleA"
+            case2:
+              summary: petsが存在しない
+              value:
+                pets: []
+    '404':
+      description: '存在しない'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    default:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
