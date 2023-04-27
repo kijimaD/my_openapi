@@ -5,9 +5,10 @@ services:
     ports:
       - 7777:80
     volumes:
-      - ./openapi.yml:/usr/share/nginx/html/openapi.yml
+      - ./out.yml:/usr/share/nginx/html/out.yml
     environment:
-      - 'SPEC_URL=openapi.yml'
+      - 'SPEC_URL=out.yml'
+
   mock:
     image: stoplight/prism:4
     ports:
@@ -15,3 +16,12 @@ services:
     volumes:
       - .:/work
     command: mock -h 0.0.0.0 /work/openapi.yml
+
+  merger:
+   build: .
+   volumes:
+     - .:/work
+   working_dir: /work
+   command: yarn -s run swagger-merger -i openapi.yml -o out.yml
+   depends_on:
+     - doc
