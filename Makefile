@@ -28,7 +28,8 @@ yamllint: ## yaml lintを実行する
 
 .PHONY: openapi-validator
 openapi-validator: ## openapi-validatorを実行する
-	docker run --rm -v ${PWD}:/work jamescooke/openapi-validator --verbose --report_statistics /work/openapi.yml
+# 失敗する...
+# docker run --rm -v ${PWD}:/work ibmdevxsdk/openapi-validator:1.13.0 /work/openapi.yml
 
 .PHONY: help
 help: ## ヘルプ表示
